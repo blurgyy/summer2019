@@ -1,3 +1,9 @@
+# smtp auth
+*.auth
+
+# mailing list
+to*
+
 # html
 *.html
 
