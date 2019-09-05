@@ -46,7 +46,7 @@ class oucit:
             else:
                 ret += [self.news[i] for i in range(self.default_refresh_count)];
             with open(fname, 'w') as f:
-                json.dump(self.news, f);
+                json.dump(self.news, f, indent=4);
         if(self.checking_list['notice']):
             fname = os.path.join(self.cache_dir, "notice.json");
             if(not os.path.exists(self.cache_dir)):
@@ -58,7 +58,7 @@ class oucit:
             else:
                 ret += [self.notice[i] for i in range(self.default_refresh_count)];
             with open(fname, 'w') as f:
-                json.dump(self.notice, f);
+                json.dump(self.notice, f, indent=4);
         if(self.checking_list['activity']):
             fname = os.path.join(self.cache_dir, "activity.json");
             if(not os.path.exists(self.cache_dir)):
@@ -70,7 +70,7 @@ class oucit:
             else:
                 ret += [self.activity[i] for i in range(self.default_refresh_count)];
             with open(fname, 'w') as f:
-                json.dump(self.activity, f);
+                json.dump(self.activity, f, indent=4);
         return ret;
 
 if(__name__ == "__main__"):
