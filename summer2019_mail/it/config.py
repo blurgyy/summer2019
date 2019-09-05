@@ -20,7 +20,7 @@ def load():
     if(os.path.exists(conf_fname)):
         with open(conf_fname) as f:
             config = json.load(f);
-        print(f"loaded config from {conf_fname}");
+        # print(f"loaded configuration from {conf_fname}");
     else:
         config = {};
         config['coding'] = 'utf-8';
@@ -46,7 +46,7 @@ def load():
         config['cycle'] = max(300, read_check("Script will check updates every ____ seconds> ", r'\d+', int));
         with open(conf_fname, 'w') as f:
             json.dump(config, f, indent=4);
-        print(f"config saved to {conf_fname}");
+        print(f"configuration saved to {conf_fname}");
     return config;
     # print(config);
 
