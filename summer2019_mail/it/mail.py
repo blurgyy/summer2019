@@ -3,7 +3,6 @@
 
 import smtplib 
 from email.mime.text import MIMEText 
-from email.header import Header 
 
 class mail:
     def __init__(self, _art, ):
