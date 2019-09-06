@@ -15,7 +15,10 @@ def read_check(s, pat = '', return_type = str):
             s = "Invalid format, reenter> ";
 
 def load():
-    conf_dir = os.path.join(env["HOME"], ".config");
+    if(os.name == "posix"):
+        conf_dir = os.path.join(env["HOME"], ".config");
+    else:
+        conf_dir = os.path.join(os.getcwd(), ".config");
     conf_fname = os.path.join(conf_dir, "summer2019_mail.json");
     if(os.path.exists(conf_fname)):
         with open(conf_fname) as f:
@@ -25,7 +28,10 @@ def load():
         config = {};
         config['coding'] = 'utf-8';
         # config['cache_dir'] = os.path.join(env["HOME"], ".cache", "blurgy", "summer2019_mail");
-        config['cache_dir'] = os.path.join(env["HOME"], ".cache", "summer2019_mail");
+        if(os.name == "posix"):
+            config['cache_dir'] = os.path.join(env["HOME"], ".cache", "summer2019_mail");
+        else:
+            config['cache_dir'] = os.path.join(os.getcwd(), ".cache", "summer2019_mail");
         config['checking_list'] = {
             "news": True, 
             "notice": True, 
