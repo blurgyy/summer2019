@@ -62,7 +62,10 @@ def load():
     # print(config);
 
 def delete():
-    conf_dir = os.path.join(env["HOME"], ".config");
+    if(os.name == "posix"):
+        conf_dir = os.path.join(env["HOME"], ".config");
+    else:
+        conf_dir = os.path.join(os.getcwd(), ".config");
     conf_fname = os.path.join(conf_dir, "summer2019_mail.json");
     if(os.path.exists(conf_fname)):
         os.remove(conf_fname);
