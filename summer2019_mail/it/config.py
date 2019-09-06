@@ -1,14 +1,18 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
+from getpass import getpass 
 import os 
 from os import environ as env 
 import re 
 import json 
 
-def read_check(s, pat = '', return_type = str):
+def read_check(s, pat = '', return_type = str, hidden = False):
     while(True):
-        ret = input(s).strip();
+        if(hidden):
+            ret = getpass(s);
+        else:
+            ret = input(s).strip();
         if(len(ret) > 0 and re.match(pat, ret)):
             return return_type(ret);
         else:
@@ -43,7 +47,7 @@ def load():
         config['from'] = read_check("Sending emails from this EMAIL ADDRESS> ", r'\w+@\w+\.\w+');
         config['host'] = "smtp." + re.findall(r'@(.*?)\.', config['from'])[0] + ".com";
         config['content_type'] = "html";
-        config['auth'] = read_check("AUTH> ");
+        config['auth'] = read_check("AUTH> ", hidden = True);
         config['from_display'] = read_check("Receivers will see this NAME displayed as `sender`> ");
         to_fname = read_check("This FILE contains a mailing list> ");
         if(not os.path.exists(conf_dir)):
