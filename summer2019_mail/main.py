@@ -8,7 +8,7 @@ def main():
     conf = it.config.load();
     spider = it.oucit(conf);
     mails = [];
-    it.clear_cache(conf);
+    # it.clear_cache(conf);
     while(True):
         urls = spider.check();
         arts = [it.article(url) for url in urls];
