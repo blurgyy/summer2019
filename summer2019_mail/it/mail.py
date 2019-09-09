@@ -3,6 +3,7 @@
 
 import smtplib 
 from email.mime.text import MIMEText 
+import time 
 
 class mail:
     def __init__(self, _art, ):
@@ -13,13 +14,16 @@ class mail:
             if(not hasattr(self.art, "content")):
                 self.art.parse();
             smtp = smtplib.SMTP_SSL(config['host']);
-            smtp.login(config['from'], config['auth']);
             # smtp.set_debuglevel(1);
+            smtp.login(config['from'], config['auth']);
             mail = MIMEText(self.art.content, config['content_type'], config['coding']);
             mail['subject'] = self.art.title;
             mail['From'] = config['from_display'];
             mail['To'] = config['to_display'];
-            smtp.sendmail(config['from'], config['to'], mail.as_string());
+            # smtp.sendmail(config['from'], config['to'], mail.as_string());
+            for i in range(0, len(config['to']), 5):
+                smtp.sendmail(config['from'], config['to'][i: i+5], mail.as_string());
+                time.sleep(5);
             smtp.quit();
             print(f">>> {self.art}");
             return True;
