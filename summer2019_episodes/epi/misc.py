@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import os 
+import pickle 
 import random 
 import re 
 import requests 
@@ -62,3 +63,11 @@ def unescape(s):
 def write(fname, text):
     with open(fname, 'w') as f:
         f.write(text);
+
+def load(fname):
+    with open(fname, 'rb') as f:
+        return pickle.load(f);
+
+def dump(fname, obj):
+    with open(fname, 'wb') as f:
+        pickle.dump(obj, f);

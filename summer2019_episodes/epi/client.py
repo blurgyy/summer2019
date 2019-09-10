@@ -9,15 +9,19 @@ from . import misc
 
 class client(object):
     def __init__(self, **kwargs):
+        self.conf = kwargs;
         self.hosts = [fjisu()];
-        self.search_term = kwargs['search_term'] \
-                           if ('search_term' in kwargs and type(kwargs['search_term']) == str)\
+        self.search_term = self.conf['search_term'] \
+                           if ('search_term' in self.conf and type(self.conf['search_term']) == str) \
                            else misc.read("Input search term> ");
         self.pull();
-    def __str__(self, ):
-        ret = "(%d): \n" % (len(self.pages));
+    def __str__(self, indent = 4, showid = True):
+        ret = "";
         for i in range(len(self.pages)):
-            ret += f"\t{i+1}. {self.pages[i].title}\n";
+            ret += ' ' * indent;
+            if(showid):
+                ret += f"{i+1}. "; 
+            ret += f"{self.pages[i].title}\n";
         return ret;
     def __len__(self, ):
         return len(self.pages);
@@ -25,9 +29,9 @@ class client(object):
         for host in self.hosts:
             host.pull(self.search_term);
         self.pages = [page(item) for item in host.items for host in self.hosts];
-    def select(self, **kwargs):
-        sel = kwargs['sel'] \
-              if('sel' in kwargs and type(kwargs['sel']) == str) \
+    def select(self, ):
+        sel = self.conf['sel_id'] \
+              if('sel_id' in self.conf and type(self.conf['sel_id']) == int) \
               else misc.read("Select by id> ", r'([\d ]+|\*|!)');
         if(sel == '!'):
             print("Signal captured, abort");
@@ -37,13 +41,15 @@ class client(object):
         else:
             sel = [int(x) for x in sel.split(' ') if(len(x) > 0 and int(x) in range(1, len(self)+1))];
         return sel;
-    def descend(self, **kwargs):
-        print("Search results", self);
-        sel = self.select(**kwargs);
+    def descend(self, ):
+        print(f"Search results ({len(self)})\n" + str(self));
+        if(self.conf['slist_fname']):
+            misc.write(self.conf['slist_fname'], self.__str__(indent=0, showid=0).replace('\t', ''));
+        sel = self.select();
         self.pages = [self.pages[i-1] for i in sel if self.pages[i-1].pull()];
         if(len(self) == 0):
             return;
-        print("Selected", self);
+        print(f"Selected ({len(self)})\n" + str(self));
         self.m3u8s = [hls.m3u8(info) for page in self.pages for info in page.m3u8info];
         self.dm = dm();
         for m3u8 in self.m3u8s:
