@@ -19,7 +19,7 @@ class m3u8(object):
             ret += "un";
         ret += "playable hls document]\n"
         return ret;
-    def save(self, ):
+    def pull(self, ):
         if(not hasattr(self, "doc") or not self.check()):
             self.load();
             self.unify();

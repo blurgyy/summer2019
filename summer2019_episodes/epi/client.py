@@ -1,22 +1,13 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
+from .dm import download_manager as dm 
 from .fjisu import fjisu 
 from . import hls 
 from .itempage import page 
 from . import misc 
 
 class client(object):
-    """
-    - attributes:
-        hosts: list
-        search_term: str
-        pages: page
-    - methods:
-        __init__()
-        pull()
-        select()
-    """
     def __init__(self, **kwargs):
         self.hosts = [fjisu()];
         self.search_term = kwargs['search_term'] \
@@ -50,11 +41,15 @@ class client(object):
         print("Search results", self);
         sel = self.select(**kwargs);
         self.pages = [self.pages[i-1] for i in sel if self.pages[i-1].pull()];
+        if(len(self) == 0):
+            return;
         print("Selected", self);
         self.m3u8s = [hls.m3u8(info) for page in self.pages for info in page.m3u8info];
+        self.dm = dm();
         for m3u8 in self.m3u8s:
-            # print(m3u8.url);
-            m3u8.save();
+            th = misc.myThread(target = m3u8.pull, args = ());
+            self.dm.append(th);
+        self.dm.run();
 
 if(__name__ == "__main__"):
     x = client(search_term = "rick and morty");

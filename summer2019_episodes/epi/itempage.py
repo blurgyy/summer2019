@@ -4,11 +4,8 @@
 from .hls import m3u8 
 from . import misc 
 import re 
-# from subitempage import subpage 
 
 class page(object):
-    """
-    """
     def __init__(self, item):
         self.info = item;
         self.title = self.info['title'];
@@ -17,7 +14,7 @@ class page(object):
         self.reqs = [
             f"http://t.mtyee.com/ps/s{self.id}.js",
             f"http://t.mtyee.com/ty/yj/s{self.id}.js",
-            f"http://t.mtyee.com/ty/yj/s{self.id}.js"
+            f"http://t.mtyee.com/ty/zd/s{self.id}.js"
         ]
     def __str__(self, ):
         return self.title;
@@ -38,7 +35,6 @@ class page(object):
             for x in m3u8info if misc.ism3u8(x[0])
         ];
         return True;
-        # self.m3u8s = [m3u8(x) for x in m3u8info];
 
 if(__name__ == '__main__'):
     item = {

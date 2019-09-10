@@ -1,11 +1,24 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
+import os 
 import random 
 import re 
 import requests 
 import socket 
 import struct 
+import threading 
+
+class myThread(threading.Thread):
+    def __init__(self, target, args=(), ):
+        super(myThread, self).__init__();
+        self.func = target;
+        self.args = args;
+    def run(self, ):
+        self.result = self.func(*self.args);
+    def fetch_result(self, ):
+        threading.Thread.join(self);
+        return self.result;
 
 def create_headers():
     ip = socket.inet_ntoa(struct.pack('>I', random.randint(1, 0xffffffff)));
@@ -14,6 +27,7 @@ def create_headers():
         'CLIENT-IP': ip,
         'User-Agent': "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.132 Safari/537.36"
     }
+    return req_headers;
 
 def iscomment(s):
     return not not re.match(r'^#.*?$', s);
