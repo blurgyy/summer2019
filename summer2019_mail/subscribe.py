@@ -7,7 +7,8 @@ import re
 
 @click.command()
 @click.argument("mail-addr", type=str, default=None)
-def main(mail_addr):
+@click.argument("args", nargs=-1)
+def main(mail_addr, args):
 	if(not re.match(r'\w+@\w+(\.\w+)+', mail_addr)):
 		return;
 	conf = it.config.load();
