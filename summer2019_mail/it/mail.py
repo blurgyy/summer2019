@@ -8,7 +8,6 @@ import time
 class mail:
     def __init__(self, _art, ):
         self.art = _art;
-        self.art.parse();
     def send(self, config, ):
         try:
             if(not hasattr(self.art, "content")):

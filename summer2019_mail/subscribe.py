@@ -1,0 +1,19 @@
+#!/usr/bin/python3
+# -*- coding: utf-8 -*-
+
+import click 
+import it 
+import re 
+
+@click.command()
+@click.argument("mail-addr", type=str, default=None)
+def main(mail_addr):
+	if(not re.match(r'\w+@\w+(\.\w+)+', mail_addr)):
+		return;
+	conf = it.config.load();
+	conf['to'].append(mail_addr);
+	conf['to'] = list(set(conf['to']));
+	it.config.renew('to', conf['to']);
+
+if(__name__ == '__main__'):
+	main();

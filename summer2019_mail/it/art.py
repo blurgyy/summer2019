@@ -19,4 +19,5 @@ class article:
         img_urls = re.findall(r'.*?src=\"(.*?)\"', self.body);
         for img_url in img_urls:
             self.body = re.sub(img_url, misc.url_join(self.base_url, img_url), self.body);
-        self.content =  self.header + self.body;
+        self.content = self.header + self.body;
+        self.content += """<hr><a href="https://106.14.194.215/oucit">(un)*subscribe</a>""";

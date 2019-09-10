@@ -46,7 +46,7 @@ def load():
             "notice": True, 
             "activity": True
         }
-        config['from'] = read_check("Sending emails from this EMAIL ADDRESS> ", r'\w+@\w+\.\w+');
+        config['from'] = read_check("Sending emails from this EMAIL ADDRESS> ", r'\w+@\w+(\.\w+)');
         config['host'] = "smtp." + re.findall(r'@(.*?)\.', config['from'])[0] + ".com";
         config['content_type'] = "html";
         config['auth'] = read_check("AUTH> ", hidden = True);
@@ -66,6 +66,17 @@ def load():
         print(f"configuration saved to {conf_fname}");
     return config;
     # print(config);
+
+def renew(key, val):
+    if(os.name == "posix"):
+        conf_dir = os.path.join(env["HOME"], ".config");
+    else:
+        conf_dir = os.path.join(os.getcwd(), ".config");
+    conf_fname = os.path.join(conf_dir, "summer2019_mail.json");
+    config = load();
+    config[key] = val;
+    with open(conf_fname, 'w') as f:
+        json.dump(config, f, indent=4);
 
 def delete():
     if(os.name == "posix"):
