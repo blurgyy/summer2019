@@ -30,6 +30,8 @@ def load():
         config['cycle'] = max(config['cycle'], 300);
         config['cycle'] = min(config['cycle'], 86400);
         config['to'] = list(set(config['to']));
+        with open(conf_fname, 'w') as f:
+            json.dump(config, f, indent=4);
         # print(f"loaded configuration from {conf_fname}");
     else:
         config = {};
