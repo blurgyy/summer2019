@@ -19,12 +19,13 @@ from urllib.parse import unquote
 @click.argument("args", nargs=-1)
 def main(s, m, w, dump, load, args):
     if(load):
-        cli = misc.load(load);
+        cli = epi.misc.load(load);
     else:
         cli = epi.client(search_term = unquote(s), sel_id = m, slist_fname = w);
-    cli.descend();
     if(dump):
-        misc.dump(dump, cli);
+        epi.misc.dump(dump, cli);
+    cli.conf['sel_id'] = str(m);
+    cli.descend();
 
 if(__name__ == "__main__"):
     main();

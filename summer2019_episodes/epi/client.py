@@ -31,7 +31,7 @@ class client(object):
         self.pages = [page(item) for item in host.items for host in self.hosts];
     def select(self, ):
         sel = self.conf['sel_id'] \
-              if('sel_id' in self.conf and type(self.conf['sel_id']) == int) \
+              if('sel_id' in self.conf and type(self.conf['sel_id']) == str) \
               else misc.read("Select by id> ", r'([\d ]+|\*|!)');
         if(sel == '!'):
             print("Signal captured, abort");
