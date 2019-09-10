@@ -4,7 +4,7 @@
 import epi 
 
 def main():
-    cli = epi.client(search_term = "");
+    cli = epi.client();
     cli.descend();
 
 if(__name__ == "__main__"):

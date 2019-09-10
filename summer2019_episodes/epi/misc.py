@@ -31,11 +31,11 @@ def read(s = "", pat = r''):
     return ret;
 
 def r_get(url, headers = create_headers(), encoding = 'utf-8', **kwargs):
-    ret =  requests.get(url, headers = headers, **kwargs).content.decode(encoding);
+    ret = requests.get(url, headers = headers, **kwargs).content.decode(encoding);
     return ret;
 
 def splithost(url):
-    return re.findall(r'https?://(.*?)/.*?', url)[0];
+    return re.findall(r'(https?://.*?)/.*?', url)[0];
 
 def urljoin(host, loc):
     return host + loc;

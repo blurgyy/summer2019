@@ -27,6 +27,7 @@ class m3u8(object):
         if(not os.path.exists(savdir)):
             os.makedirs(savdir);
         misc.write(self.info['fname'], self.doc);
+        print(f" -- {self.info['fname']}");
     def load(self, ):
         if(self.url):
             self.doc = misc.r_get(self.url, verify=False);

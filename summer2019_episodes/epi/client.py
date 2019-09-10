@@ -24,7 +24,7 @@ class client(object):
                            else misc.read("Input search term> ");
         self.pull();
     def __str__(self, ):
-        ret = "Search results(%d): \n" % (len(self.pages));
+        ret = "(%d): \n" % (len(self.pages));
         for i in range(len(self.pages)):
             ret += f"\t{i+1}. {self.pages[i].title}\n";
         return ret;
@@ -47,9 +47,10 @@ class client(object):
             sel = [int(x) for x in sel.split(' ') if(len(x) > 0 and int(x) in range(1, len(self)+1))];
         return sel;
     def descend(self, **kwargs):
-        print(self);
+        print("Search results", self);
         sel = self.select(**kwargs);
         self.pages = [self.pages[i-1] for i in sel if self.pages[i-1].pull()];
+        print("Selected", self);
         self.m3u8s = [hls.m3u8(info) for page in self.pages for info in page.m3u8info];
         for m3u8 in self.m3u8s:
             # print(m3u8.url);
