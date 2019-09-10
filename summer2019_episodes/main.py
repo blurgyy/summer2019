@@ -15,7 +15,8 @@ import epi
               help = "Dump client object into file (binary)")
 @click.option("--load", type=click.Path(exists=True), default=None,
               help = "Load binary client object from file")
-def main(s, m, w, dump, load):
+@click.argument("args", nargs=-1)
+def main(s, m, w, dump, load, args):
     if(load):
         cli = misc.load(load);
     else:
