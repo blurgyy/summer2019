@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
-import misc 
+from . import misc 
 import os 
 import re 
 import warnings 
@@ -13,17 +13,22 @@ class m3u8(object):
         self.info = info;
         self.url = info['hls_url'];
     def __str__(self, ):
-        return self.doc;
-    def pull(self, ):
-        self.load();
-        self.unify();
+        ret = "";
+        ret += self.doc + '\n[';
+        if(self.check()):
+            ret += "un";
+        ret += "playable hls document]\n"
+        return ret;
+    def save(self, ):
+        if(not hasattr(self, "doc") or not self.check()):
+            self.load();
+            self.unify();
         savdir = self.info['title'];
         if(not os.path.exists(savdir)):
             os.makedirs(savdir);
         misc.write(self.info['fname'], self.doc);
     def load(self, ):
         if(self.url):
-            print(self.url)
             self.doc = misc.r_get(self.url, verify=False);
             if(not self.check()):
                 self.host = misc.splithost(self.url);
@@ -42,9 +47,10 @@ class m3u8(object):
         lines = self.doc.splitlines();
         if(misc.ism3u8(lines[-1])):
             if(lines[-1][0] == '/'):
-                self.load(misc.urljoin(self.host, lines[-1]));
+                self.url = misc.urljoin(self.host, lines[-1]);
             else:
-                self.load(self.url.replace(self.url.split('/')[-1], line));
+                self.url = self.url.replace(self.url.split('/')[-1], lines[-1]);
+            self.load();
         lines = self.doc.splitlines();
         doc = "";
         for line in lines:

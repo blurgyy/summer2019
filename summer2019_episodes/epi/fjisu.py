@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*- 
 
 import json 
-import misc 
-from itempage import page 
+from . import misc 
+from .itempage import page 
 import re 
 import requests 
 from urllib.parse import quote, unquote 

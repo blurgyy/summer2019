@@ -24,10 +24,10 @@ def ists(s):
 def isurl(s):
     return not not re.match(r'^https?://.*?$', s);
 
-def read(s = ""):
+def read(s = "", pat = r''):
     ret = "";
-    while(len(ret) == 0):
-        ret = input(s);
+    while(len(ret) == 0 or not re.match(pat, ret)):
+        ret = input(s).strip(' \n');
     return ret;
 
 def r_get(url, headers = create_headers(), encoding = 'utf-8', **kwargs):
@@ -42,7 +42,7 @@ def urljoin(host, loc):
 
 def unescape(s):
     ret = s.replace('%', '\\');
-    ret = s.encode('latin-1').decode('unicode-escape').strip(" \n");
+    ret = ret.encode('latin-1').decode('unicode-escape').strip(" \n");
     return ret; 
 
 def write(fname, text):
