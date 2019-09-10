@@ -3,6 +3,7 @@
 
 import click 
 import epi 
+from urllib.parse import unquote 
 
 @click.command()
 @click.option("-s", type=str, default=None,
@@ -20,7 +21,7 @@ def main(s, m, w, dump, load, args):
     if(load):
         cli = misc.load(load);
     else:
-        cli = epi.client(search_term = s, sel_id = m, slist_fname = w);
+        cli = epi.client(search_term = unquote(s), sel_id = m, slist_fname = w);
     cli.descend();
     if(dump):
         misc.dump(dump, cli);
