@@ -15,3 +15,6 @@ to*
 # pycache
 __pycache__/
 *.py[cod]
+
+# deny
+!demo*
