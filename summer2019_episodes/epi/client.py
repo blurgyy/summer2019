@@ -35,7 +35,7 @@ class client(object):
     def select(self, ):
         sel = self.conf['sel_id'] \
               if('sel_id' in self.conf and type(self.conf['sel_id']) == str) \
-              else misc.read("Select by id> ", r'([\d ]+|\*|!)');
+              else misc.read("Select by id> ", r'^([\d ]+|\*|!)$');
         if(sel == '!'):
             print("Signal captured, abort");
             return [];

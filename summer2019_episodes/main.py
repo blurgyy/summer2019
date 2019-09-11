@@ -21,7 +21,8 @@ def main(s, m, w, dump, load, args):
     if(load):
         cli = epi.misc.load(load);
     else:
-        cli = epi.client(search_term = unquote(s) if s != None else None, sel_id = m, slist_fname = w);
+        cli = epi.client(search_term = unquote(s) if s != None else None, 
+                         sel_id = m, slist_fname = w);
     if(dump):
         epi.misc.dump(dump, cli);
         cli.dumps();
