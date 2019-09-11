@@ -29,7 +29,7 @@ def load():
             config = json.load(f);
         config['cycle'] = max(config['cycle'], 300);
         config['cycle'] = min(config['cycle'], 86400);
-        config['to'] = list(set(config['to']));
+        config['to'] = [x.lower() for x in list(set(config['to']))];
         with open(conf_fname, 'w') as f:
             json.dump(config, f, indent=4);
         # print(f"loaded configuration from {conf_fname}");
@@ -56,7 +56,7 @@ def load():
             os.makedirs(conf_dir);
         with open(to_fname) as f:
             lines = f.readlines();
-            config['to'] = list(set([x.strip(' \n') for x in lines if(len(x.strip(' \n')) > 0)]));
+            config['to'] = [x.lower() for x in list(set([x.strip(' \n') for x in lines if(len(x.strip(' \n')) > 0)]))];
         config['to_display'] = read_check("Receivers will see this NAME displayed as `receiver`> ")
         config['cycle'] = read_check("Script will check updates every ____ seconds> ", r'\d+', int);
         config['cycle'] = max(config['cycle'], 300);
