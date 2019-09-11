@@ -21,11 +21,11 @@ def main(s, m, w, dump, load, args):
     if(load):
         cli = epi.misc.load(load);
     else:
-        cli = epi.client(search_term = unquote(s), sel_id = m, slist_fname = w);
+        cli = epi.client(search_term = unquote(s) if s != None else None, sel_id = m, slist_fname = w);
     if(dump):
         epi.misc.dump(dump, cli);
         return;
-    cli.conf['sel_id'] = str(m);
+    cli.conf['sel_id'] = str(m) if(m != None) else None;
     cli.descend();
 
 if(__name__ == "__main__"):
