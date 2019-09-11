@@ -29,11 +29,13 @@ class client(object):
         for host in self.hosts:
             host.pull(self.search_term);
         self.pages = [page(item) for item in host.items for host in self.hosts];
+    def dumps(self, ):
+        if(self.conf['slist_fname']):
+            misc.write(self.conf['slist_fname'], self.__str__(indent=0, showid=False).replace('\t', ''));
     def select(self, ):
         sel = self.conf['sel_id'] \
               if('sel_id' in self.conf and type(self.conf['sel_id']) == str) \
               else misc.read("Select by id> ", r'([\d ]+|\*|!)');
-        print("sel =", self.conf['sel_id']);
         if(sel == '!'):
             print("Signal captured, abort");
             return [];
@@ -44,8 +46,6 @@ class client(object):
         return sel;
     def descend(self, ):
         print(f"Search results ({len(self)})\n" + str(self));
-        if(self.conf['slist_fname']):
-            misc.write(self.conf['slist_fname'], self.__str__(indent=0, showid=0).replace('\t', ''));
         sel = self.select();
         self.pages = [self.pages[i-1] for i in sel if self.pages[i-1].pull()];
         if(len(self) == 0):

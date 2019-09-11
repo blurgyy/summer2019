@@ -24,8 +24,10 @@ def main(s, m, w, dump, load, args):
         cli = epi.client(search_term = unquote(s) if s != None else None, sel_id = m, slist_fname = w);
     if(dump):
         epi.misc.dump(dump, cli);
+        cli.dumps();
         return;
-    cli.conf['sel_id'] = str(m) if(m != None) else None;
+    # assuming `m` is not empty
+    cli.conf['sel_id'] = str(m) if m != None else None;
     cli.descend();
 
 if(__name__ == "__main__"):
