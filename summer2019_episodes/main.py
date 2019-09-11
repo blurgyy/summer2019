@@ -24,6 +24,7 @@ def main(s, m, w, dump, load, args):
         cli = epi.client(search_term = unquote(s), sel_id = m, slist_fname = w);
     if(dump):
         epi.misc.dump(dump, cli);
+        return;
     cli.conf['sel_id'] = str(m);
     cli.descend();
 
