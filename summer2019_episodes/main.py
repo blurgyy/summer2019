@@ -8,7 +8,7 @@ from urllib.parse import unquote
 @click.command()
 @click.option("-s", type=str, default=None,
               help = "Specify search term")
-@click.option("-m", type=int, default=None,
+@click.option("-m", type=str, default=None,
               help = "Sepcify selection")
 @click.option("-w", type=str, default=None,
               help = "Output search list to file")
@@ -28,7 +28,7 @@ def main(s, m, w, dump, load, args):
         cli.dumps();
         return;
     # assuming `m` is not empty
-    cli.conf['sel_id'] = str(m) if m != None else None;
+    cli.conf['sel_id'] = m if m != None else None;
     cli.descend();
 
 if(__name__ == "__main__"):
