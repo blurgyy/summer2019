@@ -10,7 +10,7 @@ default_conf = {
 	'running_threads': 0
 }
 
-class download_manager(object):
+class parallel_manager(object):
 	def __init__(self, conf=default_conf):
 		self.conf = conf;
 		self.funx = [];

@@ -1,11 +1,13 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
-from .dm import download_manager as dm 
+from .pm import parallel_manager as pm 
 from .fjisu import fjisu 
 from . import hls 
 from .itempage import page 
 from . import misc 
+import os 
+import time 
 
 class client(object):
     def __init__(self, **kwargs):
@@ -52,11 +54,17 @@ class client(object):
             return;
         print(f"Selected ({len(self)})\n" + str(self));
         self.m3u8s = [hls.m3u8(info) for page in self.pages for info in page.m3u8info];
-        self.dm = dm();
+        self.dm = pm();
         for m3u8 in self.m3u8s:
             th = misc.myThread(target = m3u8.pull, args = ());
             self.dm.append(th);
         self.dm.run();
+        self.order_mtime();
+    def order_mtime(self, ):
+        for m3u8 in self.m3u8s:
+            if(os.path.exists(m3u8.info['fname'])):
+                os.utime(m3u8.info['fname']);
+                time.sleep(0.05);
 
 if(__name__ == "__main__"):
     x = client(search_term = "rick and morty");
