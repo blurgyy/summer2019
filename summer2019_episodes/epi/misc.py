@@ -45,8 +45,8 @@ def read(s = "", pat = r''):
         ret = input(s).strip(' \n');
     return ret;
 
-def r_get(url, headers = create_headers(), encoding = 'utf-8', **kwargs):
-    ret = requests.get(url, headers = headers, **kwargs).content.decode(encoding);
+def r_get(url, headers = create_headers(), encoding = 'utf-8', timeout = 9.9, **kwargs):
+    ret = requests.get(url, headers = headers, timeout = 9.9, **kwargs).content.decode(encoding);
     return ret;
 
 def splithost(url):

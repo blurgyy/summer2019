@@ -20,17 +20,24 @@ class m3u8(object):
         ret += "playable hls document]\n"
         return ret;
     def pull(self, ):
-        if(not os.path.exists(self.info['fname'])):
-            if(not hasattr(self, "doc") or not self.check()):
-                self.load();
-                self.unify();
-            savdir = self.info['title'];
-            if(not os.path.exists(savdir)):
-                os.makedirs(savdir);
-            misc.write(self.info['fname'], self.doc);
-            print(f" -- {self.info['fname']}");
-        else:
-            print(f" -- {self.info['fname']} exists");
+        try:
+            if(not os.path.exists(self.info['fname'])):
+                if(not hasattr(self, "doc") or not self.check()):
+                    self.load();
+                    self.unify();
+                savdir = self.info['title'];
+                if(self.check()):
+                    if(not os.path.exists(savdir)):
+                        os.makedirs(savdir);
+                    misc.write(self.info['fname'], self.doc);
+                    print(f" -- {self.info['fname']}");
+                    return True;
+                return False;
+            else:
+                print(f" -- {self.info['fname']} exists");
+                return True;
+        except Exception as e:
+            return False;
     def load(self, ):
         if(self.url):
             self.doc = misc.r_get(self.url, verify=False);
