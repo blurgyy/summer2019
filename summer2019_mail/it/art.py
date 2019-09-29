@@ -12,7 +12,7 @@ class article:
     def __str__(self, ):
         return self.title;
     def parse(self, ):
-        html = requests.get(self.url).content.decode('utf-8');
+        html = requests.get(self.url).content.decode('utf-8', 'replace');
         self.title = re.findall(r'<div class=[\'\"]content-tit+le[\'\"]>[\s\S]*?h1>(.*?)<\/h1>', html)[0];
         self.header = re.findall(r'<div class=[\'\"]content-sign[\'\"]>([\s\S]*?<\/div>)', html)[0];
         self.body = re.findall(r'<div class=[\'\"]content-article[\'\"]>([\s\S]*?)<\/form>', html)[0];
