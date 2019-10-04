@@ -66,8 +66,6 @@ class page(object):
             self.pm.append(th);
         self.pm.run();
         items.sort(key = lambda x : x[2]);
-        for x in items:
-            print(x[1], x[2]);
         m3u8info = [(unquote(re.findall(r'vid="(.*?\.m3u8)"', x[0])[0]), x[1])
                     for x in items];
         self.m3u8info = [
