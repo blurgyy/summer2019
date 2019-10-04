@@ -40,6 +40,7 @@ class client(object):
             th = misc.myThread(target = lambda x : self.pages.append(page(x)), args = (item, ));
             self.pm.append(th);
         self.pm.run();
+        del self.pm;
         self.pages.sort(key = lambda x : x.url);
     def dumps(self, ):
         if(self.conf['slist_fname']):
@@ -69,6 +70,7 @@ class client(object):
             th = misc.myThread(target = m3u8.pull, args = ());
             self.dm.append(th);
         self.dm.run();
+        del self.dm;
         self.order_mtime();
     def order_mtime(self, ):
         for m3u8 in self.m3u8s:
