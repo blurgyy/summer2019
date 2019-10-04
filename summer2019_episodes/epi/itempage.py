@@ -58,10 +58,16 @@ class page(object):
     def pull_91mjw(self, ):
         self.pm = parallel_manager(max_threads = 8);
         items = [];
+        sz = 0;
         for x in self.links_info:
-            th = misc.myThread(target = lambda x : items.append((misc.r_get(x[0]), x[1])), args = (x, ));
+            x = (*x, sz)
+            sz += 1;
+            th = misc.myThread(target = lambda x : items.append((misc.r_get(x[0]), x[1], x[2])), args = (x, ));
             self.pm.append(th);
         self.pm.run();
+        items.sort(key = lambda x : x[2]);
+        for x in items:
+            print(x[1], x[2]);
         m3u8info = [(unquote(re.findall(r'vid="(.*?\.m3u8)"', x[0])[0]), x[1])
                     for x in items];
         self.m3u8info = [
