@@ -3,6 +3,7 @@
 
 from .pm import parallel_manager as pm 
 from .fjisu import fjisu 
+from .mjw import mjw 
 from . import hls 
 from .itempage import page 
 from . import misc 
@@ -12,7 +13,8 @@ import time
 class client(object):
     def __init__(self, **kwargs):
         self.conf = kwargs;
-        self.hosts = [fjisu()];
+        # self.hosts = [fjisu()];
+        self.hosts = [fjisu(), mjw()];
         self.search_term = self.conf['search_term'] \
                            if ('search_term' in self.conf and type(self.conf['search_term']) == str) \
                            else misc.read("Input search term> ");
@@ -28,9 +30,17 @@ class client(object):
     def __len__(self, ):
         return len(self.pages);
     def pull(self, ):
-        for host in self.hosts:
-            host.pull(self.search_term);
-        self.pages = [page(item) for item in host.items for host in self.hosts];
+        items = [item for host in self.hosts for item in host.pull(self.search_term)];
+        # for host in self.hosts:
+        #     host.pull(self.search_term);
+        # self.pages = [page(item) for item in host.items for host in self.hosts];
+        self.pages = []
+        self.pm = pm(max_threads = 16);
+        for item in items:
+            th = misc.myThread(target = lambda x : self.pages.append(page(x)), args = (item, ));
+            self.pm.append(th);
+        self.pm.run();
+        self.pages.sort(key = lambda x : x.url);
     def dumps(self, ):
         if(self.conf['slist_fname']):
             misc.write(self.conf['slist_fname'], self.__str__(indent=0, showid=False).replace('\t', ''));

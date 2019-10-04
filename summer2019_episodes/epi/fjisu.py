@@ -3,9 +3,6 @@
 
 import json 
 from . import misc 
-from .itempage import page 
-import re 
-import requests 
 from urllib.parse import quote, unquote 
 
 class fjisu(object):
@@ -16,6 +13,7 @@ class fjisu(object):
         self.st = search_term;
         self.url = self.search_host + quote(self.st);
         self.get_list();
+        return self.items;
     def get_list(self, ):
         json_text = misc.r_get(self.url, headers = {'Origin': "http://www.fjisu.tv"}, encoding = 'utf-8-sig').strip();
         tv_list = json.loads(json_text);

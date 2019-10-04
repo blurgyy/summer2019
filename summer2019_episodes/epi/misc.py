@@ -57,7 +57,7 @@ def urljoin(host, loc):
 
 def unescape(s):
     ret = s.replace('%', '\\');
-    ret = ret.encode('latin-1').decode('unicode-escape').strip(" \n");
+    ret = ret.encode('latin-1', errors = 'ignore').decode('unicode-escape', errors = 'ignore').strip(" \n");
     return ret; 
 
 def write(fname, text):
