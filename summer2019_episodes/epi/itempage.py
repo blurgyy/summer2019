@@ -38,6 +38,8 @@ class page(object):
             self.pull_fjisu();
         elif("91mjw" in misc.splithost(self.url)):
             self.pull_91mjw();
+        elif("kukanwu" in misc.splithost(self.url)):
+            self.pull_kk();
         return True;
     def pull_fjisu(self, ):
         cont = "";
@@ -56,15 +58,15 @@ class page(object):
             for x in m3u8info if misc.ism3u8(x[0])
         ];
     def pull_91mjw(self, ):
-        self.pm = parallel_manager(max_threads = 8);
+        pm = parallel_manager(max_threads = 8);
         items = [];
         sz = 0;
         for x in self.links_info:
             x = (*x, sz)
             sz += 1;
             th = misc.myThread(target = lambda x : items.append((misc.r_get(x[0]), x[1], x[2])), args = (x, ));
-            self.pm.append(th);
-        self.pm.run();
+            pm.append(th);
+        pm.run();
         items.sort(key = lambda x : x[2]);
         m3u8info = [(unquote(re.findall(r'vid="(.*?\.m3u8)"', x[0])[0]), x[1])
                     for x in items];
@@ -76,6 +78,13 @@ class page(object):
             }
             for x in m3u8info if misc.ism3u8(x[0])
         ];
+    def pull_kk(self, ):
+        link_list = re.findall(r'<ul class="urlli">[\s\S]*?</ul', misc.r_get(self.url))[0];
+        links = [misc.splithost(self.url) + x for x in re.findall(r'<a href="(.*?)">', link_list)];
+        # self.reqs = [];
+        self.reqs = [x for link in links for x in re.findall(r'(http://t\.mtyee\.com/ps/.*?\.js)', misc.r_get(link))];
+        self.reqs = list(set(self.reqs));
+        self.pull_fjisu();
 
 
 if(__name__ == '__main__'):

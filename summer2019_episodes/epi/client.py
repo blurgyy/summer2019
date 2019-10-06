@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
-from .pm import parallel_manager as pm 
+from .pm import parallel_manager 
 from .fjisu import fjisu 
 from .mjw import mjw 
 from . import hls 
@@ -35,12 +35,11 @@ class client(object):
         #     host.pull(self.search_term);
         # self.pages = [page(item) for item in host.items for host in self.hosts];
         self.pages = []
-        self.pm = pm(max_threads = 16);
+        pm = parallel_manager(max_threads = 16);
         for item in items:
             th = misc.myThread(target = lambda x : self.pages.append(page(x)), args = (item, ));
-            self.pm.append(th);
-        self.pm.run();
-        del self.pm;
+            pm.append(th);
+        pm.run();
         self.pages.sort(key = lambda x : x.url);
     def dumps(self, ):
         if(self.conf['slist_fname']):
@@ -65,12 +64,11 @@ class client(object):
             return;
         print(f"Selected ({len(self)})\n" + str(self));
         self.m3u8s = [hls.m3u8(info) for page in self.pages for info in page.m3u8info];
-        self.dm = pm(max_threads = 8);
+        dm = parallel_manager(max_threads = 8);
         for m3u8 in self.m3u8s:
             th = misc.myThread(target = m3u8.pull, args = ());
-            self.dm.append(th);
-        self.dm.run();
-        del self.dm;
+            dm.append(th);
+        dm.run();
         self.order_mtime();
     def order_mtime(self, ):
         for m3u8 in self.m3u8s:
