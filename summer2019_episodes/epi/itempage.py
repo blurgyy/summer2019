@@ -31,6 +31,13 @@ class page(object):
                     links_info = [(f"https://91mjw.com/video/{self.id}.htm{x[0]}", x[1])
                              for x in re.findall(r'<a.*?href="(.*?)">(.*?)</a>', vlist)];
                 self.links_info = [*self.links_info, *links_info];
+        elif("kukanwu" in misc.splithost(self.url)):
+            self.id = self.url.strip('/').split('/')[-1];
+            self.reqs = [
+                f"http://t.mtyee.com/ps/s{self.id}.js",
+                f"http://t.mtyee.com/ty/yj/s{self.id}.js",
+                f"http://t.mtyee.com/ty/zd/s{self.id}.js"
+            ];
     def __str__(self, ):
         return self.title;
     def pull(self, ):
@@ -81,8 +88,7 @@ class page(object):
     def pull_kk(self, ):
         link_list = re.findall(r'<ul class="urlli">[\s\S]*?</ul', misc.r_get(self.url))[0];
         links = [misc.splithost(self.url) + x for x in re.findall(r'<a href="(.*?)">', link_list)];
-        # self.reqs = [];
-        self.reqs = [x for link in links for x in re.findall(r'(http://t\.mtyee\.com/ps/.*?\.js)', misc.r_get(link))];
+        self.reqs.extend([x for link in links for x in re.findall(r'(http://t\.mtyee\.com/ps/.*?\.js)', misc.r_get(link))]);
         self.reqs = list(set(self.reqs));
         self.pull_fjisu();
 
