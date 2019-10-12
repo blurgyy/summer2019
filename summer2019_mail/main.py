@@ -17,7 +17,6 @@ def main():
         current_time = time.asctime(time.localtime(time.time()));
         print(f"[{current_time}]: {len(updated)} update(s) posted, sending {len(mails)} item(s)");
         mails = [mail for mail in mails if(not mail.send(conf))];
-        print();
         time.sleep(conf['cycle']);
         conf = it.config.load();
 

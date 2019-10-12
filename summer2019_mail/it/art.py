@@ -16,8 +16,8 @@ class article:
         self.title = re.findall(r'<div class=[\'\"]content-tit+le[\'\"]>[\s\S]*?h1>(.*?)<\/h1>', html)[0];
         self.header = re.findall(r'<div class=[\'\"]content-sign[\'\"]>([\s\S]*?<\/div>)', html)[0];
         self.body = re.findall(r'<div class=[\'\"]content-article[\'\"]>([\s\S]*?)<\/form>', html)[0];
-        img_urls = re.findall(r'.*?src=\"(.*?)\"', self.body);
-        for img_url in img_urls:
-            self.body = re.sub(img_url, misc.url_join(self.base_url, img_url), self.body);
+        links = re.findall(r'\"(/_upload.*?)\"', self.body);
+        for link in links:
+            self.body = re.sub(link, misc.url_join(self.base_url, link), self.body);
         self.content = self.header + self.body;
-        self.content += """<hr><a href="https://106.14.194.215/index/oucit">(un)?subscribe</a>""";
+        self.content += """<hr><a href="https://106.14.194.215/index/oucit">(un)?subscribe</a>\n""" + "<br>"*5;
