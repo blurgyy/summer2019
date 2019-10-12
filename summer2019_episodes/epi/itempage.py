@@ -12,14 +12,7 @@ class page(object):
         self.info = item;
         self.title = self.info['title'];
         self.url = self.info['url'];
-        if("fjisu" in misc.splithost(self.url)):
-            self.id = self.url.strip('/').split('/')[-1];
-            self.reqs = [
-                f"http://t.mtyee.com/ps/s{self.id}.js",
-                f"http://t.mtyee.com/ty/yj/s{self.id}.js",
-                f"http://t.mtyee.com/ty/zd/s{self.id}.js"
-            ];
-        elif("91mjw" in misc.splithost(self.url)):
+        if("91mjw" in misc.splithost(self.url)):
             self.id = self.url.strip('/').split('/')[-1].split('.')[0];
             vlists_info = re.findall(r'<div id="video_list_li" class="video_list_li">([\s\S]*?)</div>', misc.r_get(self.url));
             self.links_info = [];
@@ -31,7 +24,7 @@ class page(object):
                     links_info = [(f"https://91mjw.com/video/{self.id}.htm{x[0]}", x[1])
                              for x in re.findall(r'<a.*?href="(.*?)">(.*?)</a>', vlist)];
                 self.links_info = [*self.links_info, *links_info];
-        elif("kukanwu" in misc.splithost(self.url)):
+        else:
             self.id = self.url.strip('/').split('/')[-1];
             self.reqs = [
                 f"http://t.mtyee.com/ps/s{self.id}.js",
@@ -41,12 +34,10 @@ class page(object):
     def __str__(self, ):
         return self.title;
     def pull(self, ):
-        if("fjisu" in misc.splithost(self.url)):
-            self.pull_fjisu();
-        elif("91mjw" in misc.splithost(self.url)):
+        if("91mjw" in misc.splithost(self.url)):
             self.pull_91mjw();
-        elif("kukanwu" in misc.splithost(self.url)):
-            self.pull_kk();
+        else:
+            self.pull_fjisu();
         return True;
     def pull_fjisu(self, ):
         cont = "";
@@ -85,12 +76,6 @@ class page(object):
             }
             for x in m3u8info if misc.ism3u8(x[0])
         ];
-    def pull_kk(self, ):
-        link_list = re.findall(r'<ul class="urlli">[\s\S]*?</ul', misc.r_get(self.url))[0];
-        links = [misc.splithost(self.url) + x for x in re.findall(r'<a href="(.*?)">', link_list)];
-        self.reqs.extend([x for link in links for x in re.findall(r'(http://t\.mtyee\.com/ps/.*?\.js)', misc.r_get(link))]);
-        self.reqs = list(set(self.reqs));
-        self.pull_fjisu();
 
 
 if(__name__ == '__main__'):
