@@ -4,3 +4,9 @@
 [![HitCount](http://hits.dwyl.io/Blurgyy/summer2019.svg)](http://hits.dwyl.io/Blurgyy/summer2019)
 
 2019 夏季学期的随便 repository
+
+## Installing Dependencies
+
+```bash
+$ pip3 install -r requirements.txt
+```
