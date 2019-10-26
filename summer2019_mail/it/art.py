@@ -19,5 +19,7 @@ class article:
         links = set(re.findall(r'\"(/_.*?)\"', self.body));
         for link in links:
             self.body = re.sub(link, misc.url_join(self.base_url, link), self.body);
-        self.content = self.header + self.body;
-        self.content += """<hr><a href="https://106.14.194.215/index/oucit">(un)?subscribe</a>\n\n""" + "<br>"*5;
+        self.content = "<!DOCTYPE html>\n<html>\n<body>\n";
+        self.content += self.header + self.body;
+        self.content += """<hr>\n<a href="https://106.14.194.215/index/oucit">(un)?subscribe</a>\n""" + "<br>"*5;
+        self.content += "</body>\n</html>";
