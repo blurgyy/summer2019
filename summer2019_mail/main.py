@@ -19,6 +19,7 @@ def main():
         mails = [mail for mail in mails if(not mail.send(conf))];
         time.sleep(conf['cycle']);
         conf = it.config.load();
+        spider.load(conf);
 
 if(__name__ == "__main__"):
     main();

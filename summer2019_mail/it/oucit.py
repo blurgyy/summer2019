@@ -12,9 +12,11 @@ import shutil
 class oucit:
     def __init__(self, config, ):
         self.base_url = "http://it.ouc.edu.cn";
+        self.load(config);
+        self.default_refresh_count = 1;
+    def load(self, config, ):
         self.cache_dir = config['cache_dir'];
         self.checking_list = config['checking_list'];
-        self.default_refresh_count = 1;
     def parse(self, ):
         html = requests.get(self.base_url).text;
         if(self.checking_list['news']):
