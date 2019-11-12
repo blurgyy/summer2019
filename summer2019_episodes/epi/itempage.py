@@ -12,6 +12,7 @@ class page(object):
         self.info = item;
         self.title = self.info['title'];
         self.url = self.info['url'];
+        self.m3u8info = [];
         if("91mjw" in misc.splithost(self.url)):
             self.id = self.url.strip('/').split('/')[-1].split('.')[0];
             vlists_info = re.findall(r'<div id="video_list_li" class="video_list_li">([\s\S]*?)</div>', misc.r_get(self.url));
