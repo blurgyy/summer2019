@@ -21,5 +21,5 @@ class article:
             self.body = re.sub(link, misc.url_join(self.base_url, link), self.body);
         self.content = "<!DOCTYPE html>\n<html>\n<body>\n";
         self.content += self.header + self.body;
-        self.content += """<hr>\n<a href="https://106.14.194.215/index/oucit">(un)?subscribe</a>\n""" + "<br>"*5;
+        self.content += f"""<hr>\n<a href="https://{misc.serverip}/index/oucit">(un)?subscribe</a>\n""" + "<br>"*5;
         self.content += "</body>\n</html>";

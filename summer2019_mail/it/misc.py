@@ -4,6 +4,8 @@
 import os 
 import shutil 
 
+serverip = "47.101.132.200";
+
 def url_join(host, loc):
     return host + loc;
 
