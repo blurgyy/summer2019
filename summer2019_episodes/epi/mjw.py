@@ -9,10 +9,14 @@ class mjw(object):
     def __init__(self, ):
         self.host = "http://91mjw.com";
         self.search_host = self.host + "/?s=";
+        self.items = [];
     def pull(self, search_term, ):
         self.st = search_term;
         self.url = self.search_host + quote(self.st);
-        self.get_list();
+        try:
+            self.get_list();
+        except:
+            print(f"  ![{self.host}]");
         return self.items;
     def get_list(self, ):
         html_text = misc.r_get(self.url);
