@@ -52,7 +52,7 @@ class page(object):
                 **self.info,
                 'hls_url': x[0], 
                 'nonsense': x[1], 
-                'fname': self.info['title']+os.sep+misc.unescape(x[2])+".m3u8"
+                'fname': misc.unescape(x[2])+".m3u8"
             }
             for x in m3u8info if misc.ism3u8(x[0])
         ];
@@ -73,7 +73,7 @@ class page(object):
                 {
                 **self.info,
                 'hls_url': x[0],
-                'fname': self.info['title']+os.sep+misc.unescape(x[1])+".m3u8"
+                'fname': misc.unescape(x[1])+".m3u8"
             }
             for x in m3u8info if misc.ism3u8(x[0])
         ];

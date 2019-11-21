@@ -71,3 +71,7 @@ def load(fname):
 def dump(fname, obj):
     with open(fname, 'wb') as f:
         pickle.dump(obj, f);
+
+def read_file(fname):
+    with open(fname, 'r') as f:
+        return f.read();

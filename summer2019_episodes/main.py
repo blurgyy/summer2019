@@ -12,16 +12,19 @@ from urllib.parse import unquote
               help = "Sepcify selection")
 @click.option("-w", type=str, default=None,
               help = "Output search list to file")
+@click.option("-n", "--no-patience", is_flag = True, 
+              help = "Deactivate -n flag (default) to prevent overwriting files which should not have been overwritten (possibly slower due to more network usage)")
 @click.option("--dump", type=str, default=None,
               help = "Dump client object into file (binary)")
 @click.option("--load", type=click.Path(exists=True), default=None,
               help = "Load binary file as client object")
 @click.argument("args", nargs=-1)
-def main(s, m, w, dump, load, args):
+def main(s, m, w, no_patience, dump, load, args):
     if(load):
         cli = epi.misc.load(load);
     else:
         cli = epi.client(search_term = unquote(s) if s != None else None, 
+                         patience = not no_patience, 
                          sel_id = m, slist_fname = w);
     if(dump):
         epi.misc.dump(dump, cli);

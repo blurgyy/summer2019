@@ -19,25 +19,49 @@ class m3u8(object):
             ret += "un";
         ret += "playable hls document]\n"
         return ret;
-    def pull(self, ):
+    def pull(self, patience = True, ):
         try:
-            if(not os.path.exists(self.info['fname'])):
+            if(patience):
                 if(not hasattr(self, "doc") or not self.check()):
                     self.load();
                     self.unify();
-                savdir = self.info['title'];
-                if(self.check()):
-                    if(not os.path.exists(savdir)):
-                        os.makedirs(savdir);
-                    misc.write(self.info['fname'], self.doc);
-                    print(f" -- {self.info['fname']}");
+                if(self.unique()):
+                    if(self.check()):
+                        self.save();
+                        return True;
+                    return False;
+                else:
+                    print(f" -- {self.savpath()} exists");
                     return True;
-                return False;
             else:
-                print(f" -- {self.info['fname']} exists");
-                return True;
+                if(not os.path.exists(self.savpath())):
+                    if(not hasattr(self, "doc") or not self.check()):
+                        self.load();
+                        self.unify();
+                    if(self.check()):
+                        self.save();
+                        return True;
+                    return False;
+                else:
+                    print(f" -- {self.savpath()} exists");
+                    return True;
         except Exception as e:
+            print(e)
             return False;
+    def unique(self, ):
+        if(not os.path.exists(self.savpath())):
+            return True;
+        if(misc.read_file(self.savpath()) == self.doc):
+            return False;
+        self.info['idx'] = 1;
+        while(os.path.exists(self.savpath())):
+            if(misc.read_file(self.savpath()) == self.doc):
+                return False;
+            self.info['idx'] += 1;
+        return True;
+    def savpath(self, ):
+        idx = self.info.get('idx', 0);
+        return os.path.join(self.info['title'], '_'*idx + self.info['fname']);
     def load(self, ):
         if(self.url):
             self.doc = misc.r_get(self.url, verify=False);
@@ -46,6 +70,13 @@ class m3u8(object):
         else:
             print("hls: no source specified");
         self.doc = self.doc.strip(' \n');
+    def save(self, ):
+        savdir = self.info['title'];
+        if(not os.path.exists(savdir)):
+            os.makedirs(savdir);
+        misc.write(self.savpath(), self.doc);
+        print(f" -- {self.savpath()}");
+        return True;
     def check(self, ):
         for line in self.doc.splitlines():
             if(re.match(r'^#.*$', line) or re.match(r'^https?.*$', line) and re.match(r'^.*?\.ts$', line)):

@@ -13,6 +13,7 @@ import time
 class client(object):
     def __init__(self, **kwargs):
         self.conf = kwargs;
+        self.patience = self.conf.get('patience', True);
         # self.hosts = [fjisu()];
         self.hosts = [fjisu(), mjw()];
         self.search_term = self.conf['search_term'] \
@@ -66,7 +67,7 @@ class client(object):
         self.m3u8s = [hls.m3u8(info) for page in self.pages for info in page.m3u8info];
         dm = parallel_manager(max_threads = 8);
         for m3u8 in self.m3u8s:
-            th = misc.myThread(target = m3u8.pull, args = ());
+            th = misc.myThread(target = m3u8.pull, args = (self.patience, ));
             dm.append(th);
         dm.run();
         self.order_mtime();
