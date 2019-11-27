@@ -12,6 +12,7 @@ class m3u8(object):
     def __init__(self, info):
         self.info = info;
         self.url = info['hls_url'];
+        self.epname = self.info['fname'];
     def __str__(self, ):
         ret = "";
         ret += self.doc + '\n[';
@@ -61,7 +62,8 @@ class m3u8(object):
         return True;
     def savpath(self, ):
         idx = self.info.get('idx', 0);
-        return os.path.join(self.info['title'], '_'*idx + self.info['fname']);
+        self.info['fname'] = '_'*idx + self.epname;
+        return os.path.join(self.info['title'], self.info['fname']);
     def load(self, ):
         if(self.url):
             self.doc = misc.r_get(self.url, verify=False);
