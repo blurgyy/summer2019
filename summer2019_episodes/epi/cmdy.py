@@ -20,8 +20,6 @@ class cmdy(object):
             'wd': self.st
         }
         html_text = misc.r_post(self.search_host, data = form);
-        with open("test.html", 'w') as f:
-            f.write(html_text);
         try:
             self.get_list(html_text);
         except:
