@@ -24,7 +24,6 @@ class myThread(threading.Thread):
 def create_headers():
     ip = socket.inet_ntoa(struct.pack('>I', random.randint(1, 0xffffffff)));
     req_headers = {
-        # 'Origin': "http://www.fjisu.tv",
         'CLIENT-IP': ip,
         'User-Agent': "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.132 Safari/537.36"
     }
@@ -47,6 +46,10 @@ def read(s = "", pat = r''):
 
 def r_get(url, headers = create_headers(), encoding = 'utf-8', timeout = 9.9, **kwargs):
     ret = requests.get(url, headers = headers, timeout = 9.9, **kwargs).content.decode(encoding);
+    return ret;
+
+def r_post(url, data = None, headers = create_headers(), encoding = 'utf-8', timeout = 9.9, **kwargs):
+    ret = requests.post(url, data = data, headers = headers, timeout = 9.9, **kwargs).content.decode(encoding);
     return ret;
 
 def splithost(url):

@@ -4,8 +4,8 @@
 from .pm import parallel_manager 
 from .fjisu import fjisu 
 from .mjw import mjw 
+from .cmdy import cmdy 
 from . import hls 
-# from .itempage import page 
 from . import misc 
 import os 
 import time 
@@ -14,8 +14,7 @@ class client(object):
     def __init__(self, **kwargs):
         self.conf = kwargs;
         self.patience = self.conf.get('patience', True);
-        # self.hosts = [fjisu()];
-        self.hosts = [fjisu(), mjw()];
+        self.hosts = [fjisu(), mjw(), cmdy()];
         self.search_term = self.conf['search_term'] \
                            if ('search_term' in self.conf and type(self.conf['search_term']) == str) \
                            else misc.read("Input search term> ");
@@ -64,7 +63,6 @@ class client(object):
         sel = self.select();
         self.pages = [self.pages[i-1] for i in sel if self.pages[i-1].pull()];
         if(len(self) == 0):
-            print("?")
             return;
         print(f"Selected ({len(self)})\n" + str(self));
         self.m3u8s = [hls.m3u8(info) for page in self.pages for info in page.m3u8info];
