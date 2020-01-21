@@ -30,14 +30,20 @@ class client(object):
     def __len__(self, ):
         return len(self.pages);
     def pull(self, ):
-        items = [item for host in self.hosts for item in host.pull(self.search_term)];
+        items = [];
+        pm = parallel_manager(max_threads = 4);
+        for host in self.hosts:
+            th = misc.myThread(target = host.pull, args = (self.search_term, ));
+            pm.append(th);
+        pm.run();
+        items = [item for host in self.hosts for item in host.items];
         # print(items);
         # input();
         # for host in self.hosts:
         #     host.pull(self.search_term);
         # self.pages = [page(item) for item in host.items for host in self.hosts];
         self.pages = []
-        pm = parallel_manager(max_threads = 16);
+        pm = parallel_manager(max_threads = 4);
         for item in items:
             th = misc.myThread(target = lambda x : self.pages.append(x['self'].itempage(x)), args = (item, ));
             pm.append(th);
@@ -66,7 +72,7 @@ class client(object):
             return;
         print(f"Selected ({len(self)})\n" + str(self));
         self.m3u8s = [hls.m3u8(info) for page in self.pages for info in page.m3u8info];
-        dm = parallel_manager(max_threads = 8);
+        dm = parallel_manager(max_threads = 4);
         for m3u8 in self.m3u8s:
             th = misc.myThread(target = m3u8.pull, args = (self.patience, ));
             dm.append(th);
