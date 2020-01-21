@@ -5,7 +5,7 @@ from .pm import parallel_manager
 from .fjisu import fjisu 
 from .mjw import mjw 
 from . import hls 
-from .itempage import page 
+# from .itempage import page 
 from . import misc 
 import os 
 import time 
@@ -32,13 +32,15 @@ class client(object):
         return len(self.pages);
     def pull(self, ):
         items = [item for host in self.hosts for item in host.pull(self.search_term)];
+        # print(items);
+        # input();
         # for host in self.hosts:
         #     host.pull(self.search_term);
         # self.pages = [page(item) for item in host.items for host in self.hosts];
         self.pages = []
         pm = parallel_manager(max_threads = 16);
         for item in items:
-            th = misc.myThread(target = lambda x : self.pages.append(page(x)), args = (item, ));
+            th = misc.myThread(target = lambda x : self.pages.append(x['self'].itempage(x)), args = (item, ));
             pm.append(th);
         pm.run();
         self.pages.sort(key = lambda x : x.url);
@@ -64,7 +66,7 @@ class client(object):
         if(len(self) == 0):
             return;
         print(f"Selected ({len(self)})\n" + str(self));
-        self.m3u8s = [hls.m3u8(info) for page in self.pages for info in page.m3u8info];
+        self.m3u8s = [hls.m3u8(info) for info in page.m3u8info];
         dm = parallel_manager(max_threads = 8);
         for m3u8 in self.m3u8s:
             th = misc.myThread(target = m3u8.pull, args = (self.patience, ));
