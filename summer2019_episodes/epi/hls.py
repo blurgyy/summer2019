@@ -11,12 +11,12 @@ warnings.filterwarnings('ignore', r'.*?Unverified HTTPS request is being made.*?
 class m3u8(object):
     def __init__(self, info):
         self.info = info;
-        self.url = info['hls_url'];
-        self.epname = self.info['fname'];
+        self.url = self.info['hls_url'];
+        self.epname = self.info['fname'][:-5];
     def __str__(self, ):
         ret = "";
         ret += self.doc + '\n[';
-        if(self.check()):
+        if(not self.check()):
             ret += "un";
         ret += "playable hls document]\n"
         return ret;
@@ -62,7 +62,8 @@ class m3u8(object):
         return True;
     def savpath(self, ):
         idx = self.info.get('idx', 0);
-        self.info['fname'] = '_'*idx + self.epname;
+        if(idx > 0):
+            self.info['fname'] = f"{self.epname}({idx}).m3u8";
         return os.path.join(self.info['title'], self.info['fname']);
     def load(self, ):
         if(self.url):
