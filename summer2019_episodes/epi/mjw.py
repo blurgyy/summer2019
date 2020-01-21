@@ -51,7 +51,7 @@ class mjw(object):
         def __str__(self, ):
             return self.title;
         def pull(self, ):
-            pm = parallel_manager(max_threads = 4);
+            pm = parallel_manager();
             items = [];
             sz = 0;
             for x in self.links_info:

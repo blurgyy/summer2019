@@ -3,9 +3,10 @@
 
 from .misc import myThread 
 import time 
+from multiprocessing import cpu_count 
 
 default_conf = {
-    'max_threads': 4, 
+    'max_threads': cpu_count() * 3 + 1, 
     'retry': 3, 
     'running': False, 
     'running_threads': 0
