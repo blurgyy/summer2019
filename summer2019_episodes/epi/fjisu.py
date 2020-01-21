@@ -53,6 +53,7 @@ class fjisu(object):
                 }
                 for x in m3u8info if misc.ism3u8(x[0])
             ];
+            return True;
 
 if(__name__ == '__main__'):
     x = fjisu();

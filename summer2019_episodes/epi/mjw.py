@@ -21,7 +21,11 @@ class mjw(object):
         return self.items;
     def get_list(self, ):
         html_text = misc.r_get(self.url);
-        results = re.findall(r'(<article class="u-movie">[\s\S]*?</article>)', html_text);
+        try:
+            content_block = re.findall(r'list-content([\s\S]*?)widget widget_hot', html_text)[0];
+        except:
+            content_block = html_text;
+        results = re.findall(r'(<article class="u-movie">[\s\S]*?</article>)', content_block);
         # TODO: remove hot list from results
         info = [re.findall(r'" href="(.*?)"[\s\S].*?<h2>(.*?)</h2>', x)[0] for x in results];
         self.items = [{'self': self, 'title': x[1], 'url': x[0]} for x in info];
@@ -59,6 +63,8 @@ class mjw(object):
             items.sort(key = lambda x : x[2]);
             m3u8info = [(unquote(re.findall(r'vid="(.*?\.m3u8)"', x[0])[0]), x[1])
                         for x in items];
+            if(len(m3u8info) == 0):
+                return False;
             self.m3u8info = [
                     {
                     **self.info,
@@ -67,6 +73,7 @@ class mjw(object):
                 }
                 for x in m3u8info if misc.ism3u8(x[0])
             ];
+            return True;
 
 if(__name__ == '__main__'):
     import misc 

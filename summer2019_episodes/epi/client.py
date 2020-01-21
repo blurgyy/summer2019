@@ -64,9 +64,10 @@ class client(object):
         sel = self.select();
         self.pages = [self.pages[i-1] for i in sel if self.pages[i-1].pull()];
         if(len(self) == 0):
+            print("?")
             return;
         print(f"Selected ({len(self)})\n" + str(self));
-        self.m3u8s = [hls.m3u8(info) for info in page.m3u8info];
+        self.m3u8s = [hls.m3u8(info) for page in self.pages for info in page.m3u8info];
         dm = parallel_manager(max_threads = 8);
         for m3u8 in self.m3u8s:
             th = misc.myThread(target = m3u8.pull, args = (self.patience, ));
