@@ -79,11 +79,11 @@ class client(object):
         dm.run();
         self.order_mtime();
     def order_mtime(self, ):
+        atime = time.time();
         for m3u8 in self.m3u8s:
             path = os.path.join(m3u8.info['title'], m3u8.info['fname']);
             if(os.path.exists(path)):
-                os.utime(path);
-                time.sleep(0.01);
+                os.utime(path, (atime, atime + self.m3u8s.index(m3u8)));
 
 if(__name__ == "__main__"):
     x = client(search_term = "rick and morty");
