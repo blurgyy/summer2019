@@ -9,8 +9,9 @@
 # mailing list
 to*
 
-# html
+# misc 
 *.html
+*.json
 
 # pycache
 __pycache__/
