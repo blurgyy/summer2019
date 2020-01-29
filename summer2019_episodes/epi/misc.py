@@ -21,6 +21,11 @@ class myThread(threading.Thread):
         threading.Thread.join(self);
         return self.result;
 
+def function_wrapper(func, args, pmobject):
+    ret = func(*args);
+    pmobject.semaphore.release();
+    return ret;
+
 def create_headers():
     ip = socket.inet_ntoa(struct.pack('>I', random.randint(1, 0xffffffff)));
     req_headers = {

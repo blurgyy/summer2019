@@ -3,13 +3,11 @@
 
 from .misc import myThread 
 import time 
+import threading 
 from multiprocessing import cpu_count 
 
 default_conf = {
-    'max_threads': cpu_count() * 3 + 1, 
-    'retry': 3, 
-    'running': False, 
-    'running_threads': 0
+    'max_threads': cpu_count() * 3 + 1
 }
 
 class parallel_manager(object):
@@ -17,27 +15,16 @@ class parallel_manager(object):
         self.conf = default_conf;
         self.conf = {**self.conf, **kwargs};
         self.funx = [];
-        self.sups = [];
+        # self.sups = [];
+        self.threads = [];
+        self.semaphore = threading.BoundedSemaphore(self.conf['max_threads']);
     def append(self, th: myThread):
         self.funx.append(th);
-    def supervisor(self, th, ):
-        while(self.conf['running_threads'] > self.conf['max_threads']):
-            time.sleep(0.1);
-        th.start();
-        self.conf['running_threads'] += 1;
-        th.join();
-        self.conf['running_threads'] -= 1;
     def run(self, ):
-        self.conf['running'] = True;
-        self.conf['running_threads'] = 0;
-        for retry in range(0, self.conf['retry']):
-            while(len(self.funx) > 0):
-                th = self.funx.pop();
-                sup = myThread(target = self.supervisor, args = (th, ));
-                sup.start();
-                self.sups.append(sup);
-            for sup in self.sups:
-                sup.join();
-            if(len(self.funx) == 0):
-                break;
-        self.conf['running'] = False;
+        while(len(self.funx) > 0):
+            self.semaphore.acquire();
+            th = self.funx.pop();
+            th.start();
+            self.threads.append(th);
+        for th in self.threads:
+            th.join();

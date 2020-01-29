@@ -4,9 +4,6 @@
 import json 
 import re 
 from . import misc 
-from .pm import parallel_manager 
-# import misc 
-# from pm import parallel_manager 
 from urllib.parse import quote, unquote 
 
 class cmdy(object):

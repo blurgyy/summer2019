@@ -57,7 +57,8 @@ class mjw(object):
             for x in self.links_info:
                 x = (*x, sz)
                 sz += 1;
-                th = misc.myThread(target = lambda x : items.append((misc.r_get(x[0]), x[1], x[2])), args = (x, ));
+                function = lambda x : items.append((misc.r_get(x[0]), x[1], x[2]));
+                th = misc.myThread(target = misc.function_wrapper, args = (function, (x, ), pm));
                 pm.append(th);
             pm.run();
             items.sort(key = lambda x : x[2]);

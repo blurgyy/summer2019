@@ -33,7 +33,7 @@ class client(object):
         items = [];
         pm = parallel_manager();
         for host in self.hosts:
-            th = misc.myThread(target = host.pull, args = (self.search_term, ));
+            th = misc.myThread(target = misc.function_wrapper, args = (host.pull, (self.search_term, ), pm));
             pm.append(th);
         pm.run();
         items = [item for host in self.hosts for item in host.items];
@@ -45,7 +45,8 @@ class client(object):
         self.pages = []
         pm = parallel_manager();
         for item in items:
-            th = misc.myThread(target = lambda x : self.pages.append(x['self'].itempage(x)), args = (item, ));
+            function = lambda x : self.pages.append(x['self'].itempage(x))
+            th = misc.myThread(target = misc.function_wrapper, args = (function, (item, ), pm));
             pm.append(th);
         pm.run();
         self.pages.sort(key = lambda x : x.url);
@@ -74,7 +75,7 @@ class client(object):
         self.m3u8s = [hls.m3u8(info) for page in self.pages for info in page.m3u8info];
         dm = parallel_manager();
         for m3u8 in self.m3u8s:
-            th = misc.myThread(target = m3u8.pull, args = (self.patience, ));
+            th = misc.myThread(target = misc.function_wrapper, args = (m3u8.pull, (self.patience, ), dm));
             dm.append(th);
         dm.run();
         self.order_mtime();
