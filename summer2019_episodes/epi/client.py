@@ -77,7 +77,10 @@ class client(object):
         for m3u8 in self.m3u8s:
             th = misc.myThread(target = misc.function_wrapper, args = (m3u8.pull, (self.patience, ), dm));
             dm.append(th);
-        dm.run_with_retry();
+        if(self.patience):
+            dm.run_with_retry();
+        else:
+            dm.run();
         self.order_mtime();
     def order_mtime(self, ):
         atime = time.time();
