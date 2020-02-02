@@ -19,7 +19,7 @@ import epi
               help = "Dump client object into file (binary)")
 @click.option("--load", type=click.Path(exists=True), default=None,
               help = "Load binary file as client object")
-@click.option("--save-path", type=click.Path(exists=True), default=None, 
+@click.option("--save-path", type=click.Path(exists=True), default=".", 
               help = "Set save path")
 @click.argument("args", nargs=-1)
 def main(s, m, w, no_patience, dump, load, save_path, args):
