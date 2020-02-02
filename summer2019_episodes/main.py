@@ -2,8 +2,9 @@
 # -*- coding: utf-8 -*-
 
 import click 
-import epi 
 from urllib.parse import unquote 
+import os 
+import epi 
 
 @click.command()
 @click.option("-s", type=str, default=None,
@@ -18,8 +19,10 @@ from urllib.parse import unquote
               help = "Dump client object into file (binary)")
 @click.option("--load", type=click.Path(exists=True), default=None,
               help = "Load binary file as client object")
+@click.option("--save-path", type=click.Path(exists=True), default=None, 
+              help = "Set save path")
 @click.argument("args", nargs=-1)
-def main(s, m, w, no_patience, dump, load, args):
+def main(s, m, w, no_patience, dump, load, save_path, args):
     if(load):
         cli = epi.misc.load(load);
     else:
@@ -32,6 +35,7 @@ def main(s, m, w, no_patience, dump, load, args):
         return;
     # assuming `m` is not empty
     cli.conf['sel_id'] = m if m != None else None;
+    os.chdir(save_path);
     cli.descend();
 
 if(__name__ == "__main__"):
