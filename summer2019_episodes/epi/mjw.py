@@ -63,7 +63,7 @@ class mjw(object):
             pm.run();
             items.sort(key = lambda x : x[2]);
             m3u8info = [(unquote(re.findall(r'vid="(.*?\.m3u8)"', x[0])[0]), x[1])
-                        for x in items];
+                        for x in items if re.search(r'vid="(.*?\.m3u8)"', x[0])];
             if(len(m3u8info) == 0):
                 return False;
             self.m3u8info = [
