@@ -25,6 +25,7 @@ import epi
 def main(s, m, w, no_patience, dump, load, save_path, args):
     if(load):
         cli = epi.misc.load(load);
+        cli.patience = not no_patience;
     else:
         cli = epi.client(search_term = unquote(s) if s != None else None, 
                          patience = not no_patience, 
