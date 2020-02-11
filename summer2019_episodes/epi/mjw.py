@@ -78,6 +78,6 @@ class mjw(object):
 
 if(__name__ == '__main__'):
     import misc 
-    x = mjw();
-    x.pull("神盾局");
-    print(x.items);
+    X = mjw();
+    X.pull("神盾局");
+    print(X.items);

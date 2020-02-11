@@ -50,11 +50,11 @@ def read(s = "", pat = r''):
     return ret;
 
 def r_get(url, headers = create_headers(), encoding = 'utf-8', timeout = 9.9, **kwargs):
-    ret = requests.get(url, headers = headers, timeout = 9.9, **kwargs).content.decode(encoding);
+    ret = requests.get(url, headers = headers, timeout = timeout, **kwargs).content.decode(encoding);
     return ret;
 
 def r_post(url, data = None, headers = create_headers(), encoding = 'utf-8', timeout = 9.9, **kwargs):
-    ret = requests.post(url, data = data, headers = headers, timeout = 9.9, **kwargs).content.decode(encoding);
+    ret = requests.post(url, data = data, headers = headers, timeout = timeout, **kwargs).content.decode(encoding);
     return ret;
 
 def splithost(url):

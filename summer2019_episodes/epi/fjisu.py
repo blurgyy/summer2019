@@ -58,4 +58,3 @@ class fjisu(object):
 if(__name__ == '__main__'):
     x = fjisu();
     x.pull("神盾局");
-    print(x.pages[0].url)
