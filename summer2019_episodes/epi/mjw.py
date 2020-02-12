@@ -4,6 +4,7 @@
 from . import misc 
 from .pm import parallel_manager 
 import re 
+import requests 
 from urllib.parse import quote, unquote 
 
 class mjw(object):
@@ -16,14 +17,14 @@ class mjw(object):
         self.url = self.search_host + quote(self.st);
         try:
             self.get_list();
-        except:
+        except requests.exceptions.ReadTimeout:
             print(f"  ![{self.host}]");
         return self.items;
     def get_list(self, ):
         html_text = misc.r_get(self.url);
         try:
             content_block = re.findall(r'list-content([\s\S]*?)widget widget_hot', html_text)[0];
-        except:
+        except IndexError:
             content_block = html_text;
         results = re.findall(r'(<article class="u-movie">[\s\S]*?</article>)', content_block);
         # TODO: remove hot list from results
