@@ -4,6 +4,7 @@
 from . import misc 
 import os 
 import re 
+import requests 
 import warnings 
 
 warnings.filterwarnings('ignore', r'.*?Unverified HTTPS request is being made.*?');
@@ -46,8 +47,8 @@ class m3u8(object):
                 else:
                     print(f" -- {self.savpath()} exists");
                     return True;
-        except Exception as e:
-            print(e)
+        except requests.exceptions.ReadTimeout as e:
+            print(f"  !hls: [{e}]");
             return False;
     def unique(self, ):
         if(not os.path.exists(self.savpath())):

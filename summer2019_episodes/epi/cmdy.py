@@ -3,6 +3,7 @@
 
 import json 
 import re 
+import requests 
 from . import misc 
 from urllib.parse import quote, unquote 
 
@@ -19,7 +20,7 @@ class cmdy(object):
         html_text = misc.r_post(self.search_host, data = form);
         try:
             self.get_list(html_text);
-        except:
+        except requests.exceptions.ReadTimeout:
             print(f"  ![{self.host}]")
         return self.items;
     def get_list(self, html_text):

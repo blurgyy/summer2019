@@ -3,6 +3,7 @@
 
 import json 
 import re 
+import requests 
 from . import misc 
 from urllib.parse import quote, unquote 
 
@@ -16,7 +17,7 @@ class fjisu(object):
         self.url = self.search_host + quote(self.st);
         try:
             self.get_list();
-        except:
+        except requests.exceptions.ReadTimeout:
             print(f"  ![{self.host}]")
         return self.items;
     def get_list(self, ):
