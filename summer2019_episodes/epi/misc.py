@@ -1,7 +1,6 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
-import os 
 import pickle 
 import random 
 import re 
@@ -39,7 +38,7 @@ def iscomment(s):
 def ism3u8(s):
     return not not re.match(r'^.*?\.m3u8$', s);
 def ists(s):
-    return not not re.match(r'^.*?\.ts$', s);
+    return not not re.match(r'^.*?\.ts(\?.*?)?$', s);
 def isurl(s):
     return not not re.match(r'^https?://.*?$', s);
 
