@@ -3,7 +3,6 @@
 
 from . import misc 
 import os 
-import re 
 import requests 
 import warnings 
 
@@ -83,7 +82,7 @@ class m3u8(object):
         return True;
     def check(self, ):
         for line in self.doc.splitlines():
-            if(re.match(r'^#.*$', line) or re.match(r'^https?.*$', line) and re.match(r'^.*?\.ts$', line)):
+            if(misc.iscomment(line) or misc.isurl(line) and misc.ists(line)):
                 continue;
             return False;
         return True;
@@ -91,7 +90,7 @@ class m3u8(object):
         if(self.check()):
             return;
         lines = self.doc.splitlines();
-        if(not misc.ists(lines[-1])):
+        if(not misc.iscomment(lines[-1]) and not misc.ists(lines[-1])):
             if(lines[-1][0] == '/'):
                 self.url = misc.urljoin(self.host, lines[-1]);
             else:
