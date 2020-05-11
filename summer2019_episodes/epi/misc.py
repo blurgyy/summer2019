@@ -33,13 +33,20 @@ def create_headers():
     }
     return req_headers;
 
-def iscomment(s):
+def iskey(s: str):
+    #EXT-X-KEY:METHOD=AES-128,URI="key.key"
+    return not not re.match(r'^#EXT-X-KEY.*$', s);
+def findkey(s: str):
+    if(not iskey(s)):
+        return "";
+    return re.findall(r'URI.*[\'"](.*)[\'"]$', s.strip())[0];
+def iscomment(s: str):
     return not not re.match(r'^#.*?$', s);
-def ism3u8(s):
+def ism3u8(s: str):
     return not not re.match(r'^.*?\.m3u8$', s);
-def ists(s):
+def ists(s: str):
     return not not re.match(r'^.*?\.ts(\?.*?)?$', s);
-def isurl(s):
+def isurl(s: str):
     return not not re.match(r'^https?://.*?$', s);
 
 def read(s = "", pat = r''):

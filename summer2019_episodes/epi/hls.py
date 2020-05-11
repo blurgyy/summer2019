@@ -99,9 +99,20 @@ class m3u8(object):
         lines = self.doc.splitlines();
         doc = "";
         for line in lines:
+            if(misc.iskey(line)):
+                ori_key = misc.findkey(line);
+                key = ori_key;
+                if(len(ori_key) > 0):
+                    if(misc.isurl(key)):
+                        pass;
+                    elif(key[0] == '/'):
+                        key = misc.urljoin(self.host, ori_key);
+                    else:
+                        key = self.url.replace(self.url.split('/')[-1], ori_key);
+                line = line.replace(ori_key, key);
             if(not misc.isurl(line) and misc.ists(line)):
                 if(line[0] == '/'):
-                    line = self.host + line;
+                    line = misc.urljoin(self.host, line);
                 else:
                     line = self.url.replace(self.url.split('/')[-1], line);
             doc += line + '\n';
