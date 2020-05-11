@@ -15,7 +15,10 @@ class myThread(threading.Thread):
         self.func = target;
         self.args = args;
     def run(self, ):
-        self.result = self.func(*self.args);
+        try:
+            self.result = self.func(*self.args);
+        except requests.ConnectionError as e:
+            self.result = e;
     def fetch_result(self, ):
         threading.Thread.join(self);
         return self.result;

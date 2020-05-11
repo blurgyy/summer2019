@@ -41,7 +41,7 @@ class parallel_manager(object):
                 self.threads.append(th);
             for th in self.threads:
                 th.join();
-                if(th.fetch_result()):
+                if(th.fetch_result() == True):
                     continue;
                 retry_th = myThread(target = th.func, args = th.args);
                 self.funx.append(retry_th);
