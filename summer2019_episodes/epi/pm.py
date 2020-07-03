@@ -21,14 +21,21 @@ class parallel_manager(object):
     def append(self, th: myThread):
         self.funx.append(th)
 
-    def run(self, ):
+    def run(self, progress=False):
         while (len(self.funx) > 0):
             self.semaphore.acquire()
             th = self.funx.pop()
+
+            if (progress):
+                print("\r%6d jobs left"%(len(self.funx)), end="")
+
             th.start()
             self.threads.append(th)
         for th in self.threads:
             th.join()
+
+        if (progress):
+            print()
 
     def run_with_retry(self, ):
         self.conf['retry'] = self.conf.get('retry', 1)

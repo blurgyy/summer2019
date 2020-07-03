@@ -84,10 +84,15 @@ def read(s="", pat=r''):
 
 def r_get(url,
           headers=create_headers(),
+          binary=False,
           encoding='utf-8',
           timeout=9.9,
           **kwargs):
-    ret = requests.get(url, headers=headers, timeout=timeout,
+    if binary:
+        ret = requests.get(url, headers=headers, timeout=timeout,
+                       **kwargs).content
+    else:
+        ret = requests.get(url, headers=headers, timeout=timeout,
                        **kwargs).content.decode(encoding)
     return ret
 
