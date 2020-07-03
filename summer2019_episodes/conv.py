@@ -7,9 +7,25 @@ import sys
 import os
 
 # Global vars
-userhome = os.environ['HOME']
-cache_dir_base = os.path.join(userhome, ".cache/summer2019")
-dl_dest = os.path.join(userhome, "Downloads/summer2019")
+if os.name == "posix":
+    userhome = os.environ['HOME']
+    cache_dir_base = os.path.join(userhome, ".cache/summer2019")
+    dl_dest = os.path.join(userhome, "Downloads/summer2019")
+else:
+    cache_dir_base = os.path.join(".", "cache")
+    dl_dest = os.path.join(".", "downloads")
+
+
+def piece_name(index: int):
+    return "{:09d}".format(index)
+
+
+def check_finish(name: str, cnt: int):
+    cache_dir = os.path.join(cache_dir_base, name)
+    for i in range(cnt):
+        if not os.path.exists(os.path.join(cache_dir, piece_name(i))):
+            return False
+    return True
 
 
 def dl(url: str, name: str, index: int):
@@ -17,24 +33,47 @@ def dl(url: str, name: str, index: int):
     cache_dir = os.path.join(cache_dir_base, name)
     if not os.path.exists(cache_dir):
         os.makedirs(cache_dir)
-    with open(os.path.join(cache_dir, "{:09d}".format(index)), 'wb') as f:
+    with open(os.path.join(cache_dir, piece_name(index)), 'wb') as f:
         f.write(content)
 
 
-def parse(hlsdoc: str, name: str):
-    srcs = [x.strip() for x in hlsdoc if misc.ists(x) and misc.isurl(x)]
+def concatentate(name: str, cnt: int, key: bytes):
+    from Crypto.Cipher import AES
+    cryptor = AES.new(key, AES.MODE_CBC, key)
     cache_dir = os.path.join(cache_dir_base, name)
+    dest_fname = os.path.join(dl_dest, name + ".ts")
+    with open(dest_fname, 'wb') as f:
+        for i in range(cnt):
+            with open(os.path.join(cache_dir, piece_name(i)), 'rb') as ff:
+                if key:
+                    f.write(cryptor.decrypt(ff.read()))
+                else:
+                    f.write(ff.read())
+
+
+def parse(hlsdoc: str, name: str):
+    srcs = []
+    key = None
+    for x in hlsdoc:
+        if misc.ists(x) and misc.isurl(x):
+            srcs.append(x.strip())
+        if misc.iskey(x):
+            key = misc.r_get(misc.findkey(x), binary=True)
+    cache_dir = os.path.join(cache_dir_base, name)
+
+    # Download pieces
     pm = epi.pm.parallel_manager(max_threads=6, retry=1)
-    for i in range(len(srcs)):
-        th = misc.myThread(target=misc.function_wrapper,
-                           args=(dl, (srcs[i], name, i), pm))
-        pm.append(th)
-    pm.run(progress=True)
-    print("Concatenating ..")
-    with open(os.path.join(dl_dest, name + ".ts"), 'wb') as f:
+    while not check_finish(name, len(srcs)):
         for i in range(len(srcs)):
-            with open(os.path.join(cache_dir, "{:09d}".format(i)), 'rb') as ff:
-                f.write(ff.read())
+            if not os.path.exists(os.path.join(cache_dir, piece_name(i))):
+                th = misc.myThread(target=misc.function_wrapper,
+                                   args=(dl, (srcs[i], name, i), pm))
+                pm.append(th)
+        pm.run(progress=True)
+
+    # Concatenate, decrypt if necessary
+    print("Concatenating ..")
+    concatentate(name, len(srcs), key)
     print("Done")
 
 
@@ -50,6 +89,11 @@ def main():
         os.makedirs(cache_dir_base)
     if not os.path.exists(dl_dest):
         os.makedirs(dl_dest)
+
+    print("""
+Starting, cache directory is '{}'
+destination directory is '{}'
+""".format(cache_dir_base, dl_dest))
 
     for i in range(len(filelist)):
         x = filelist[i]

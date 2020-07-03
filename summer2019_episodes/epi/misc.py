@@ -24,7 +24,11 @@ class myThread(threading.Thread):
         try:
             self.result = self.func(*self.args)
         except requests.ConnectionError as e:
-            self.result = e
+            print("{} when executing function {} with args{}".format(
+                e, self.func.__name__(), self.args))
+        except requests.exceptions.ReadTimeout as e:
+            print("{} when executing function {} with args{}".format(
+                e, self.func.__name__(), self.args))
 
     def fetch_result(self, ):
         threading.Thread.join(self)
@@ -50,7 +54,7 @@ def create_headers():
 
 def iskey(s: str):
     #EXT-X-KEY:METHOD=AES-128,URI="key.key"
-    return not not re.match(r'^#EXT-X-KEY.*$', s)
+    return not not re.match(r'^#EXT-X-KEY.*$', s.strip())
 
 
 def findkey(s: str):
@@ -60,19 +64,19 @@ def findkey(s: str):
 
 
 def iscomment(s: str):
-    return not not re.match(r'^#.*?$', s)
+    return not not re.match(r'^#.*?$', s.strip())
 
 
 def ism3u8(s: str):
-    return not not re.match(r'^.*?\.m3u8$', s)
+    return not not re.match(r'^.*?\.m3u8$', s.strip())
 
 
 def ists(s: str):
-    return not not re.match(r'^.*?\.ts(\?.*?)?$', s)
+    return not not re.match(r'^.*?\.ts(\?.*?)?$', s.strip())
 
 
 def isurl(s: str):
-    return not not re.match(r'^https?://.*?$', s)
+    return not not re.match(r'^https?://.*?$', s.strip())
 
 
 def read(s="", pat=r''):
@@ -90,24 +94,32 @@ def r_get(url,
           **kwargs):
     if binary:
         ret = requests.get(url, headers=headers, timeout=timeout,
-                       **kwargs).content
+                           **kwargs).content
     else:
         ret = requests.get(url, headers=headers, timeout=timeout,
-                       **kwargs).content.decode(encoding)
+                           **kwargs).content.decode(encoding)
     return ret
 
 
 def r_post(url,
            data=None,
+           binary=False,
            headers=create_headers(),
            encoding='utf-8',
            timeout=9.9,
            **kwargs):
-    ret = requests.post(url,
-                        data=data,
-                        headers=headers,
-                        timeout=timeout,
-                        **kwargs).content.decode(encoding)
+    if binary:
+        ret = requests.post(url,
+                            data=data,
+                            headers=headers,
+                            timeout=timeout,
+                            **kwargs).content
+    else:
+        ret = requests.post(url,
+                            data=data,
+                            headers=headers,
+                            timeout=timeout,
+                            **kwargs).content.decode(encoding)
     return ret
 
 
