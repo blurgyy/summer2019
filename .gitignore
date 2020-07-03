@@ -1,9 +1,10 @@
 # hls & video
 *.m3u8
+*.key
 *.ts
 *.mp4
 
-# audio 
+# audio
 *.mp3
 
 # smtp auth
@@ -12,9 +13,11 @@
 # mailing list
 to*
 
-# misc 
+# misc
 *.html
 *.json
+*.vim
+*.log
 
 # pycache
 __pycache__/
