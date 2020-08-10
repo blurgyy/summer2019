@@ -38,8 +38,9 @@ def dl(url: str, name: str, index: int):
 
 
 def concatentate(name: str, cnt: int, key: bytes):
-    from Crypto.Cipher import AES
-    cryptor = AES.new(key, AES.MODE_CBC, key)
+    if key:
+        from Crypto.Cipher import AES
+        cryptor = AES.new(key, AES.MODE_CBC, key)
     cache_dir = os.path.join(cache_dir_base, name)
     dest_fname = os.path.join(dl_dest, name + ".ts")
     with open(dest_fname, 'wb') as f:
