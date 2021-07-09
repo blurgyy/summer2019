@@ -12,10 +12,11 @@ import time
 
 
 class client(object):
+
     def __init__(self, **kwargs):
         self.conf = kwargs
         self.patience = self.conf.get('patience', True)
-        self.hosts = [fjisu(), mjw(), cmdy()]
+        self.hosts = [fjisu(), mjw()]
         self.search_term = self.conf['search_term'] \
                            if ('search_term' in self.conf and type(self.conf['search_term']) == str) \
                            else misc.read("Input search term> ")
@@ -30,15 +31,16 @@ class client(object):
             ret += f"{self.pages[i].title}\n"
         return ret
 
-    def __len__(self, ):
+    def __len__(self,):
         return len(self.pages)
 
-    def pull(self, ):
+    def pull(self,):
         items = []
         pm = parallel_manager()
         for host in self.hosts:
-            th = misc.myThread(target=misc.function_wrapper,
-                               args=(host.pull, (self.search_term, ), pm))
+            th = misc.myThread(
+                target=misc.function_wrapper,
+                args=(host.pull, (self.search_term,), pm))
             pm.append(th)
         pm.run()
         items = [item for host in self.hosts for item in host.items]
@@ -51,18 +53,18 @@ class client(object):
         pm = parallel_manager()
         for item in items:
             function = lambda x: self.pages.append(x['self'].itempage(x))
-            th = misc.myThread(target=misc.function_wrapper,
-                               args=(function, (item, ), pm))
+            th = misc.myThread(
+                target=misc.function_wrapper, args=(function, (item,), pm))
             pm.append(th)
         pm.run()
         self.pages.sort(key=lambda x: x.url)
 
-    def dumps(self, ):
+    def dumps(self,):
         if (self.conf['slist_fname']):
             misc.write(self.conf['slist_fname'],
                        self.__str__(indent=0, showid=False).replace('\t', ''))
 
-    def select(self, ):
+    def select(self,):
         sel = self.conf['sel_id'] \
               if('sel_id' in self.conf and type(self.conf['sel_id']) == str) \
               else misc.read("Select by id> ", r'^([\d ]+|\*|!)$')
@@ -73,13 +75,14 @@ class client(object):
             sel = [i for i in range(1, len(self) + 1)]
         else:
             sel = [
-                int(x) for x in sel.split(' ')
+                int(x)
+                for x in sel.split(' ')
                 if (len(x) > 0 and int(x) in range(1,
                                                    len(self) + 1))
             ]
         return sel
 
-    def descend(self, ):
+    def descend(self,):
         print(f"Search results ({len(self)})\n" + str(self))
         sel = self.select()
         self.pages = [
@@ -93,8 +96,9 @@ class client(object):
         ]
         dm = parallel_manager()
         for m3u8 in self.m3u8s:
-            th = misc.myThread(target=misc.function_wrapper,
-                               args=(m3u8.pull, (self.patience, ), dm))
+            th = misc.myThread(
+                target=misc.function_wrapper,
+                args=(m3u8.pull, (self.patience,), dm))
             dm.append(th)
         if (self.patience):
             dm.run_with_retry()
@@ -102,7 +106,7 @@ class client(object):
             dm.run()
         self.order_mtime()
 
-    def order_mtime(self, ):
+    def order_mtime(self,):
         atime = time.time()
         for m3u8 in self.m3u8s:
             path = os.path.join(m3u8.info['title'], m3u8.info['fname'])
