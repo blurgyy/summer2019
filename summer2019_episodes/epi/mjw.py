@@ -9,7 +9,8 @@ from urllib.parse import quote, unquote
 
 
 class mjw(object):
-    def __init__(self, ):
+
+    def __init__(self,):
         self.host = "http://91mjw.com"
         self.search_host = self.host + "/?s="
         self.items = []
@@ -26,7 +27,7 @@ class mjw(object):
             print(f"  ![{self.host}]")
         return self.items
 
-    def get_list(self, ):
+    def get_list(self,):
         html_text = misc.r_get(self.url)
         try:
             content_block = re.findall(
@@ -40,10 +41,15 @@ class mjw(object):
             re.findall(r'" href="(.*?)"[\s\S].*?<h2>(.*?)</h2>', x)[0]
             for x in results
         ]
-        self.items = [{'self': self, 'title': x[1], 'url': x[0]} for x in info]
+        self.items = [{
+            'self': self,
+            'title': x[1],
+            'url': x[0]
+        } for x in info]
         # tv_list = json.loads(json_text);
         # self.items = [{'title': x['title'], 'url': x['url']} for x in tv_list];
     class itempage(object):
+
         def __init__(self, item):
             self.info = item
             self.title = self.info['title']
@@ -56,9 +62,11 @@ class mjw(object):
             self.links_info = []
             for vlist in vlists_info:
                 if ("vlink" in vlist):
-                    links_info = [(f"https://91mjw.com/vplay/{x[0]}.html",
-                                   x[1]) for x in re.findall(
-                                       r'<a.*?id="(.*?)">(.*?)</a>', vlist)]
+                    links_info = [(
+                        f"https://91mjw.com/vplay/{x[0]}.html", x[1]
+                    ) for x in re.findall(
+                        r'<[\s\S]*?a[\s\S]*?id="(.*?)"[\s\S]*?>\s*(.*?)</a>',
+                        vlist)]
                 else:
                     links_info = [
                         (f"https://91mjw.com/video/{self.id}.htm{x[0]}", x[1])
@@ -67,10 +75,10 @@ class mjw(object):
                     ]
                 self.links_info = [*self.links_info, *links_info]
 
-        def __str__(self, ):
+        def __str__(self,):
             return self.title
 
-        def pull(self, ):
+        def pull(self,):
             pm = parallel_manager()
             items = []
             sz = 0
@@ -79,13 +87,14 @@ class mjw(object):
                 sz += 1
                 function = lambda x: items.append(
                     (misc.r_get(x[0]), x[1], x[2]))
-                th = misc.myThread(target=misc.function_wrapper,
-                                   args=(function, (x, ), pm))
+                th = misc.myThread(
+                    target=misc.function_wrapper, args=(function, (x,), pm))
                 pm.append(th)
             pm.run()
             items.sort(key=lambda x: x[2])
             m3u8info = [(unquote(re.findall(r'vid="(.*?\.m3u8)"',
-                                            x[0])[0]), x[1]) for x in items
+                                            x[0])[0]), x[1])
+                        for x in items
                         if re.search(r'vid="(.*?\.m3u8)"', x[0])]
             if (len(m3u8info) == 0):
                 return False
