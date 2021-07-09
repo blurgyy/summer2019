@@ -11,12 +11,13 @@ warnings.filterwarnings('ignore',
 
 
 class m3u8(object):
+
     def __init__(self, info):
         self.info = info
         self.url = self.info['hls_url']
         self.epname = self.info['fname'][:-5]
 
-    def __str__(self, ):
+    def __str__(self,):
         ret = ""
         ret += self.doc + '\n['
         if (not self.check()):
@@ -57,7 +58,7 @@ class m3u8(object):
             print(f"  !hls: [{e}]")
             return False
 
-    def unique(self, ):
+    def unique(self,):
         if (not os.path.exists(self.savpath())):
             return True
         if (misc.read_file(self.savpath()) == self.doc):
@@ -69,13 +70,13 @@ class m3u8(object):
             self.info['idx'] += 1
         return True
 
-    def savpath(self, ):
+    def savpath(self,):
         idx = self.info.get('idx', 0)
         if (idx > 0):
             self.info['fname'] = f"{self.epname}({idx}).m3u8"
         return os.path.join(self.info['title'], self.info['fname'])
 
-    def load(self, ):
+    def load(self,):
         if (self.url):
             self.doc = misc.r_get(self.url, verify=False)
             if (not self.check()):
@@ -84,7 +85,7 @@ class m3u8(object):
             print("hls: no source specified")
         self.doc = self.doc.strip(' \n')
 
-    def save(self, ):
+    def save(self,):
         savdir = self.info['title']
         if (not os.path.exists(savdir)):
             os.makedirs(savdir)
@@ -92,14 +93,14 @@ class m3u8(object):
         print(f" -- {self.savpath()}")
         return True
 
-    def check(self, ):
+    def check(self,):
         for line in self.doc.splitlines():
             if (misc.iscomment(line) or misc.isurl(line) and misc.ists(line)):
                 continue
             return False
         return True
 
-    def unify(self, ):
+    def unify(self,):
         if (self.check()):
             return
         lines = self.doc.splitlines()
@@ -107,23 +108,25 @@ class m3u8(object):
             if (lines[-1][0] == '/'):
                 self.url = misc.urljoin(self.host, lines[-1])
             else:
-                self.url = self.url.replace(self.url.split('/')[-1], lines[-1])
+                self.url = self.url.replace(
+                    self.url.split('/')[-1], lines[-1])
             self.load()
         lines = self.doc.splitlines()
         doc = ""
         for line in lines:
             if (misc.iskey(line)):
-                ori_key = misc.findkey(line)
-                key = ori_key
-                if (len(ori_key) > 0):
-                    if (misc.isurl(key)):
-                        pass
-                    elif (key[0] == '/'):
-                        key = misc.urljoin(self.host, ori_key)
-                    else:
-                        key = self.url.replace(
-                            self.url.split('/')[-1], ori_key)
-                line = line.replace(ori_key, key)
+                if ("METHOD=NONE" not in line):
+                    ori_key = misc.findkey(line)
+                    key = ori_key
+                    if (len(ori_key) > 0):
+                        if (misc.isurl(key)):
+                            pass
+                        elif (key[0] == '/'):
+                            key = misc.urljoin(self.host, ori_key)
+                        else:
+                            key = self.url.replace(
+                                self.url.split('/')[-1], ori_key)
+                    line = line.replace(ori_key, key)
             if (not misc.isurl(line) and misc.ists(line)):
                 if (line[0] == '/'):
                     line = misc.urljoin(self.host, line)
